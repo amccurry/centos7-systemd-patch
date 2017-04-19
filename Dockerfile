@@ -44,5 +44,4 @@ WORKDIR /root
 COPY rebuild_rpm.sh /root
 COPY systemd-docker-unpriv.patch /root
 
-VOLUME [ "/output" ]
 CMD [ "/root/rebuild_rpm.sh" ]
