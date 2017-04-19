@@ -1,0 +1,27 @@
+From 1eef0a6e9406f92ab3ccca8dc857852f653a0a48 Mon Sep 17 00:00:00 2001
+From: systemd team <systemd-maint@redhat.com>
+Date: Tue, 18 Apr 2017 12:37:13 -0400
+Subject: [PATCH] Patch to get systemd to run without sys_admin cap.
+
+---
+ src/shared/path-util.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/shared/path-util.c b/src/shared/path-util.c
+index 1181ffb..377ea3e 100644
+--- a/src/shared/path-util.c
++++ b/src/shared/path-util.c
+@@ -502,6 +502,9 @@ int path_is_mount_point(const char *t, bool allow_symlink) {
+                         nosupp = true;
+                 else if (errno == ENOENT)
+                         return 0;
++                else if (errno == EPERM)
++                        /* May be inside docker container, goto fallback. */
++                        goto fallback;
+                 else
+                         return -errno;
+         }
+-- 
+2.10.2
+
+
